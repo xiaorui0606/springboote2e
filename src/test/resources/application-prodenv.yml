@@ -1,0 +1,8 @@
+cloudtest:
+  baseUrl: https://voice-channel.azure.net
+  callControllerMapping: /call-controller
+
+spring:
+  data:
+    mongodb:
+      database: oc-sim-prod

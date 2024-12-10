@@ -1,0 +1,629 @@
+openapi: 3.0.3
+info:
+  title: API Calls for Heavy Metal Integration Tests - OpenAPI 3.0
+  description: Potential API Calls needed for Heavy Metal Integration Tests.
+  version: 0.0.1
+servers:
+  - url: https://qa.voice-channel.azure.net/onecall
+  - url: https://dev.voice-channel.azure.net/onecall
+paths:
+  /v3/calls/outbound:
+    post:
+      description: Start a call with given HM number and return a testSessionId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/outboundRequest'
+      responses:
+        '200':
+          description: test session is created and the testSessionId is returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/outboundResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '408':
+          $ref: '#/components/responses/408'
+        '503':
+          $ref: '#/components/responses/503'
+  /v1/test/conversationid/{testSessionId}:
+    get:
+      description: Given a testSessionId, fetch the conversationId(s)
+      parameters:
+        - name: testSessionId
+          in: path
+          description: The testSessionId
+          required: true
+          schema:
+            type: string
+            example: 20fa769a-d2c6-4ce1-a943-95d25fe595e3
+      responses:
+        '200':
+          description: An JSON arrray of conversationId(s) is returned
+          content:
+            application/json:
+              schema:
+                items:
+                  type: string
+                  example: c10064e8-f612-4789-95c8-da5afd6423a4
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '408':
+          $ref: '#/components/responses/408'
+        '503':
+          $ref: '#/components/responses/503'
+  /v1/test/session/callerEvents/{testSessionId}:
+    get:
+      description: Given a testSessionId, fetch the caller app events
+      parameters:
+        - name: testSessionId
+          in: path
+          description: The testSessionId
+          required: true
+          schema:
+            type: string
+            example: 47fa079d-6fad-4118-ba7e-b1ee56e88179
+      responses:
+        '200':
+          description: Return the events of the caller app
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/getcallerEventsResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '408':
+          $ref: '#/components/responses/408'
+        '503':
+          $ref: '#/components/responses/503'
+  /v1/event/eventgrid/genericevents/{conversationId}:
+    get:
+      description: Given a conversationId, fetch the events of the calls
+      parameters:
+        - name: conversationId
+          in: path
+          description: The conversationId of the call
+          required: true
+          schema:
+            type: string
+            example: 099b1099-870c-45dc-b786-f1d7af01591b
+      responses:
+        '200':
+          description: Return the events of the call
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/getgenericeventsResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '408':
+          $ref: '#/components/responses/408'
+        '503':
+          $ref: '#/components/responses/503'
+  /v1/test/session/{testSessionId}:
+    get:
+      description: >-
+        Given a testSessionId, fetch the deatails of the test session including conversationId, participant info , call events, remoteTranscripts...
+      parameters:
+        - name: testSessionId
+          in: path
+          description: The testSessionId
+          required: true
+          schema:
+            items:
+              $ref: '#/components/schemas/verifyRequest'
+      responses:
+        '200':
+          description: Return details of test session with given testSessionId
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/verifyResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '408':
+          $ref: '#/components/responses/408'
+        '503':
+          $ref: '#/components/responses/503'
+  /v3/calls/transcript/{conversationId}:
+    get:
+      description: Given a conversationId, fetch the call transcripts
+      parameters:
+        - name: conversationId
+          in: path
+          description: The conversationId of the call
+          required: true
+          schema:
+            type: string
+            example: c10064e8-f612-4789-95c8-da5afd6423a4
+      responses:
+        '200':
+          description: Return array of call transcripts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getTranscriptResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '408':
+          $ref: '#/components/responses/408'
+        '503':
+          $ref: '#/components/responses/503'
+  /v3/calls/speak:
+    post:
+      description: Customer speaks to HM bot (text to speech)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/speakRequest'
+      responses:
+        '200':
+          description: Customer message should be sent to HM successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/speakResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '408':
+          $ref: '#/components/responses/408'
+        '503':
+          $ref: '#/components/responses/503'
+  /v3/calls/senddtmf:
+    post:
+      description: >-
+        Customer send DTMF (C2 might send DTMF with 1 or multiple digits and
+        only first digit should be taken by HM)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/sendDTMFRequest'
+      responses:
+        '200':
+          description: C2 send DTMF option
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sendDTMFResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '408':
+          $ref: '#/components/responses/408'
+        '503':
+          $ref: '#/components/responses/503'
+  /v1/calls/hangup:
+    post:
+      description: C2 send hangup request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hangupRequest'
+      responses:
+        '200':
+          description: hangup response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hangupResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '408':
+          $ref: '#/components/responses/408'
+        '503':
+          $ref: '#/components/responses/503'
+  /v1/testsession/status/{testSessionId}:
+    get:
+      description: Given a testSessionId, get status of calls in the test session
+      parameters:
+        - name: testSessionId
+          in: path
+          description: The testSessionId
+          required: true
+          schema:
+            type: string
+            example: 20fa769a-d2c6-4ce1-a943-95d25fe595e3
+      responses:
+        '200':
+          description: An JSON arrray of status for each conversation is returned
+          content:
+            application/json:
+              schema:
+                items:
+                  type: object
+                  properties:
+                    conversationId:
+                      type: string
+                      example: 76991795-c4d0-416e-ae21-a002cbdeabae
+                    status:
+                      type: string
+                      example: connected
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '408':
+          $ref: '#/components/responses/408'
+        '503':
+          $ref: '#/components/responses/503'
+  /v1/testsession/summary/{testSessionId}:
+    get:
+      description: Given a testSessionId, get summary of the test session
+      parameters:
+        - name: testSessionId
+          in: path
+          description: The testSessionId
+          required: true
+          schema:
+            type: string
+            example: 20fa769a-d2c6-4ce1-a943-95d25fe595e3
+      responses:
+        '200':
+          description: Returns summary of the test session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  connected:
+                    type: integer
+                    example: 2
+                  connecting:
+                    type: integer
+                    example: 0
+                  disconnected:
+                    type: integer
+                    example: 0
+                  notStarted:
+                    type: integer
+                    example: 0
+                  audioSuccess:
+                    type: integer
+                    example: 0
+                  ttsSuccess:
+                    type: integer
+                    example: 0
+                  dtmfSuccess:
+                    type: integer
+                    example: 2
+                  hangUpSuccess:
+                    type: integer
+                    example: 0
+                  callHangUpError:
+                    type: integer
+                    example: 0
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '408':
+          $ref: '#/components/responses/408'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/badRequest'
+    '401':
+      description: Unauthorized Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/unauthorizedRequest'
+    '404':
+      description: Request Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/requestNotFound'
+    '408':
+      description: Request Timeout
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/requestTimeout'
+    '503':
+      description: Service Not Available
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/serviceUnavailable'
+  schemas:
+    outboundRequest:
+      type: object
+      properties:
+        noOfCalls:
+          type: integer
+          example: 1
+        destinationNumber:
+          type: string
+          example: +18552465844 <HM phone number>
+        sourceNumber:
+          type: string
+          example: >-
+            +18772121974 <Phone number associated with the ACS instance for
+            Caller app>
+        userType:
+          type: string
+          example: PHONE_NUMBER_IDENTIFIER
+        callHangUpTimeout:
+          type: integer
+          example: 120
+        connectionString:
+          type: string
+          example: <ACS Connection String for Caller App>
+        language:
+          type: string
+          example: en-US
+    outboundResponse:
+      type: object
+      properties:
+        testSessionId:
+          type: string
+          example: 20fa769a-d2c6-4ce1-a943-95d25fe595e3
+    verifyRequest:
+      type: object
+      properties:
+        testSessionId:
+          type: string
+          example: 20fa769a-d2c6-4ce1-a943-95d25fe595e3
+    verifyResponse:
+      type: object
+      properties:
+        testSessionId:
+          type: string
+          example: fc77dddf-3f7f-41ee-93d7-a79efbdc90b3
+        callSessionList:
+          type: array
+          items:
+            type: object
+            properties:
+              testSessionId:
+                type: string
+                example: fc77dddf-3f7f-41ee-93d7-a79efbdc90b3
+              conversationId:
+                type: string
+                example: d0c87303-90ea-4e04-8483-8603f037a1c3
+              data:
+                type: object
+                properties:
+                  conversationId:
+                    type: string
+                    example: d0c87303-90ea-4e04-8483-8603f037a1c3
+                  totalParticipants:
+                    type: integer
+                    example: 2
+                  participants:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        identifier:
+                          type: object
+                          properties:
+                            rawId:
+                              type: string
+                              example: 4:+18552465844
+                            phoneNumber:
+                              type: string
+                              example: '+18552465844'
+                        muted:
+                          type: boolean
+                          example: false
+    getgenericeventsResponse:
+      type: object
+      properties:
+        eventId:
+          type: integer
+          example: 200
+        eventMessage:
+          type: string
+          example: >-
+            StartCall success | Send TTS successful. | Send DTMF successful. |
+            Add Audio success | Call hang up successful
+        eventTimeStamp:
+          type: string
+          example: '2023-05-11T06:50:28.233Z'
+    getcallerEventsResponse:
+      type: object
+      properties:
+        eventId:
+          type: integer
+          example: 100
+        eventMessage:
+          type: string
+          example: >-
+            Test session started | Call client initialization success |
+            PlaceCall end success
+        eventTimeStamp:
+          type: string
+          example: '2023-05-11T06:50:28.233Z'
+    getTranscriptResponse:
+      items:
+        type: object
+        properties:
+          timeStamp:
+            type: string
+            example: '2023-05-12T14:44:03.769Z'
+          transcriptValue:
+            type: string
+            example: Hey
+          silence:
+            type: boolean
+            example: false
+          participantRawId:
+            type: string
+            example: null
+    speakRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          example: >-
+            20fa769a-d2c6-4ce1-a943-95d25fe595e3 <testSessionId or
+            conversationId based on idType>
+        idType:
+          type: string
+          example: CALL_SESSION | TEST_SESSION
+        connectionString:
+          type: string
+          example: <ACS connection string for Caller App>
+        speechText:
+          type: string
+          example: book a flight
+    speakResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          example: success
+    sendDTMFRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          example: >-
+            20fa769a-d2c6-4ce1-a943-95d25fe595e3 <testSessionId or
+            conversationId based on idType>
+        dtmfTone:
+          description: The DTMF number that C2 choose
+          type: string
+          example: zero,one,two,nine,a,b,c,d,pound,asterisk
+        idType:
+          type: string
+          example: TEST_SESSION | CALL_SESSION
+        connectionString:
+          type: string
+          example: <ACS connection string for Caller App>
+    sendDTMFResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          example: success
+        dtmfTone:
+          description: The DTMF number that C2 choose
+          type: string
+          example: 2 <Please provide this field in response>
+        timeStamp:
+          type: string
+          example: 2023-05-12T14:45:00.142Z <Please provide this field in response>
+    hangupRequest:
+      type: object
+      properties:
+        callHangUpIdType:
+          type: string
+          example: TEST_SESSION | CALL_SESSION
+        id:
+          type: string
+          example: >-
+            20fa769a-d2c6-4ce1-a943-95d25fe595e3 <testSessionId or
+            conversationId based on idType>
+        connectionString:
+          type: string
+          example: <ACS Connection String for Caller App>
+    hangupResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          example: success
+    badRequest:
+      type: object
+      properties:
+        statusCode:
+          type: string
+          example: '400'
+        errorMessage:
+          type: string
+          example: >-
+            Bad request, please make sure the request is in good form and
+            contains expected payloads
+    unauthorizedRequest:
+      type: object
+      properties:
+        statusCode:
+          type: string
+          example: '401'
+        errorMessage:
+          type: string
+          example: 401 Unauthorized request, authentication fails.
+    requestNotFound:
+      type: object
+      properties:
+        statusCode:
+          type: string
+          example: '404'
+        errorMessage:
+          type: string
+          example: Request Not Found
+    requestTimeout:
+      type: object
+      properties:
+        statusCode:
+          type: string
+          example: '408'
+        errorMessage:
+          type: string
+          example: Request Timeout
+    serviceUnavailable:
+      type: object
+      properties:
+        statusCode:
+          type: string
+          example: '503'
+        errorMessage:
+          type: string
+          example: Service Unavailable

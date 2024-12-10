@@ -1,0 +1,25 @@
+cloudtest:
+  baseUrl: https://ppe.voice-channel.azure.net
+  callControllerMapping: /call-controller
+  tenantId: 975f013f-7f24-47e8-a7d3-abc4752bf346
+  azureActiveDirectoryApplicationIdOrUri: 1fb88f28-9d4d-4303-aa58-9f09ce44333e
+  ccOauthScope: "%s/.default"
+
+serviceprincipal:
+  clientIdKey: ctestspcidppeenv
+  clientSecretKey: ctestspclientsppeenv
+
+spring:
+  data:
+    mongodb:
+      database: oc-sim-ppe
+
+acscaller:
+  baseUrl: https://qa.voice-channel.azure.net/acs-caller-v2
+  acsClientId: ctestspcid
+  acsClientSk: ctestspclients
+  ccOauthGrantType: client_credentials
+ocsim:
+  baseMapping: https://qa.voice-channel.azure.net
+  ocSimMapping: oc-sim-ppe/v1/activity
+

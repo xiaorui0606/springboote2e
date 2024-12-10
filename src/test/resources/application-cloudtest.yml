@@ -1,0 +1,94 @@
+NUANCE: nuance
+
+# Used by OpenTracing to report the "service-name" of a Span
+# See https://github.com/opentracing-contrib/java-spring-jaeger#defaults
+logging:
+  level:
+    com:
+      nuance:
+        ent:
+          cc: INFO
+    root: INFO
+
+spring:
+#  cloud:
+#    azure:
+#      keyvault:
+#        secret:
+#          property-sources:
+#          - endpoint: https://kv-cloudtest-cc.vault.azure.net/
+  data:
+    mongodb:
+      retry:
+        delay: 500
+        maxAttempts: 3
+        maxDelay: 1000
+      uri: mongodb://cosdbeuentdevacscaller:${acsCallerV2MongdbPassword}@cosdbeuentdevacscaller.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@cosdbeuentdevacscaller@
+  application:
+    name: e2e-tests
+  autoconfigure:
+    exclude:
+
+cloudtest:
+  baseUrl: http://localhost:9099
+  acsCallerMapping: /acs-caller-v2
+  botControllerMapping: /bot-controller
+  gkccMapping: /gkcc
+  tenantId: 72f988bf-86f1-41af-91ab-2d7cd011db47
+  testSubscriptionId: 78ec1d28-3374-4040-95f4-f5426876a64c
+  testResourceGroup: ns-hm-integration-rg
+  testAcsInstanceName: ns-hm-integration-rg
+  azureActiveDirectoryApplicationIdOrUri: 255ed4e5-aa54-4fdb-a0de-ed692fd4eb3a
+  oAuthTokenUrl: https://login.windows.net/%s/oauth2/token
+  ccOauthTokenUrl: https://login.microsoftonline.com/%s/oauth2/v2.0/token
+  ccOauthScope: https://microsoft.onmicrosoft.com/%s/.default
+  ccOauthGrantType: client_credentials
+  storageAccountUrl: https://saacscaller.file.core.windows.net/acscalleraudio
+#  certificateName: prom-infra-iep
+  certificateName: cc-m1-cloudtest-1p-app-certificate
+  useFirstPartyAppAuth: false # remove this when cert is available and 1st party app is integrated
+serviceprincipal:
+  clientIdKey: ctestspcid
+  clientSecretKey: ctestspclients
+  audioSas: saacscaller-sas-token
+
+armconfig:
+  grantType: client_credentials
+  resource: https://management.core.windows.net/
+  armBaseUrl: https://management.azure.com
+
+azkeyvault:
+  keyvaultname: kv-cloudtest-hm-int
+  secretname: pat
+  uaiclientid: b60d67d7-c1cb-4f0e-a74d-2fd28fb11419
+
+
+testacs:
+  connectionStringKey: ns-dev-acs-connection-string
+  sourceNumber: +18772151378
+  targetNumber: +18552465844
+
+acscaller:
+  baseUrl: https://qa.voice-channel.azure.net/onecall
+  placeCallMapping: /v3/calls/outbound
+  testSessionMapping: /v1/test/session
+  genericCallEventsMapping: /v1/event/eventgrid/genericevents
+  acsCallEventsMapping: /v1/event/eventgrid/acsevents
+  conversationFromTestMapping: /v1/test/conversationid
+  personMapping: /v1/person
+  acsClientId: ctestspcid
+  acsClientSk: ctestspclients
+  ccOauthGrantType: client_credentials
+  callHangUpMapping: /v1/calls/hangup
+  v3CallerEventsMapping: /v1/test/session/callerEvents
+  sendDTMFMapping: /v3/calls/senddtmf
+  getTranscriptMapping: /v3/calls/transcript
+  speakTTSMapping: /v3/calls/speak
+  testSessionStatusMapping: /v1/testsession/status
+  testSessionSummaryMapping: /v1/testsession/summary
+
+ocsim:
+  baseMapping: https://dev.voice-channel.azure.net
+  ocSimMapping: oc-sim-ppe/v1/activity
+  callCompletionTimeoutSeconds: 60
+

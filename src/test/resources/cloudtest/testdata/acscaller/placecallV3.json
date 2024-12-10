@@ -1,0 +1,9 @@
+{
+  "noOfCalls": 1,
+  "destinationNumber": "%s",
+  "sourceNumber": "%s",
+  "userType": "PHONE_NUMBER_IDENTIFIER",
+  "callHangUpTimeout": "%s",
+  "connectionString": "%s",
+  "language": "%s"
+}

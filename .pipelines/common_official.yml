@@ -1,0 +1,392 @@
+parameters:
+  - name: isOfficial
+    type: boolean
+    default: false
+  - name: useGitVersion
+    type: boolean
+    default: false
+
+stages:
+  - stage: cloud_test_upload_stage
+    jobs:
+      - job: cloud_test_upload_job
+        pool:
+          type: linux
+        variables:
+          ob_outputDirectory: '$(Build.SourcesDirectory)/' # this directory is uploaded to pipeline artifacts
+        steps:
+          # codeql build
+          - task: MavenAuthenticate@0
+            displayName: "Enable Maven Feed(s)"
+            inputs:
+              artifactsFeeds: "central,entrd-lightsaber-common"
+          - script: .ci/build.sh
+            displayName: "Java Build"
+
+          - script: echo "Uploading Cloud Test Artifacts"
+            displayName: "Upload Cloud Test Artifacts"
+  - stage: Test__Cloudtest_E2E_at_PPE_for_MixBot
+    dependsOn: cloud_test_upload_stage
+    displayName: 'Test: Cloudtest E2E at PPE for MixBot'
+    variables:
+      - name: ob_release_environment
+        value: Test
+    jobs:
+      - job: agentless_job
+        displayName: Agentless job
+        pool:
+          type: server
+        steps:
+          - task: CloudTestServerBuildTask@1
+            inputs:
+              displayName: 'Test: Cloudtest E2E at PPE for MixBot'
+              connectedServiceName: a0a15c60-8e84-4428-8219-c1d2660b1c34
+              cloudTestTenant: ct-account-hm-integration
+              testMapLocation: '[BuildRoot]\src\test\resources\cloudtest\TestMapJava.xml'
+              pipelineArtifactName: drop_cloud_test_upload_stage_cloud_test_upload_job
+              pipelineArtifactBuildUrl: $(System.TaskDefinitionsUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)
+              buildDropArtifactName: ''
+              buildType: retail
+              buildArchitecture: amd64
+              scheduleBuildRequesterAlias: default
+              parserProperties: Worker:ENV_NAME=load;Worker:tags=(not @skip-ppe-mix);Worker:namespace=conversation-conductor-qa;Worker:stabilityLevel=PPE;Worker:botType=MIX;Worker:FIRST_PARTY_APP_AUTH=true
+              cacheEnabled: false
+              sessionTimeout: 1440
+              failFast: true
+  - stage: Test__Cloudtest_E2E_at_CORP_CD1_for_MixBot
+    dependsOn: cloud_test_upload_stage
+    displayName: 'Test: Cloudtest E2E at CORP-CD1 for MixBot'
+    variables:
+      - name: ob_release_environment
+        value: Test
+    jobs:
+      - job: agentless_job
+        displayName: Agentless job
+        pool:
+          type: server
+        steps:
+          - task: CloudTestServerBuildTask@1
+            inputs:
+              displayName: 'Test: Cloudtest E2E at CORP-CD1 for MixBot'
+              connectedServiceName: a0a15c60-8e84-4428-8219-c1d2660b1c34
+              cloudTestTenant: ct-account-hm-integration
+              testMapLocation: '[BuildRoot]\src\test\resources\cloudtest\TestMapJava.xml'
+              pipelineArtifactName: drop_cloud_test_upload_stage_cloud_test_upload_job
+              pipelineArtifactBuildUrl: $(System.TaskDefinitionsUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)
+              buildDropArtifactName: ''
+              buildType: retail
+              buildArchitecture: amd64
+              scheduleBuildRequesterAlias: default
+              parserProperties: Worker:ENV_NAME=load;Worker:tags=(not @skip-corp-cd1-mix);Worker:namespace=conversation-conductor-qa;Worker:stabilityLevel=CORP-CD1;Worker:botType=MIX;Worker:FIRST_PARTY_APP_AUTH=true
+              cacheEnabled: false
+              sessionTimeout: 1440
+              failFast: true
+  - stage: Test__Cloudtest_E2E_at_PPE_for_PVABot
+    dependsOn: cloud_test_upload_stage
+    displayName: 'Test: Cloudtest E2E at PPE for PVABot'
+    variables:
+      - name: ob_release_environment
+        value: Test
+    jobs:
+      - job: agentless_job
+        displayName: Agentless job
+        pool:
+          type: server
+        steps:
+          - task: CloudTestServerBuildTask@1
+            inputs:
+              displayName: 'Test: Cloudtest E2E at PPE for PVABot'
+              connectedServiceName: a0a15c60-8e84-4428-8219-c1d2660b1c34
+              cloudTestTenant: ct-account-hm-integration
+              testMapLocation: '[BuildRoot]\src\test\resources\cloudtest\TestMapJava.xml'
+              pipelineArtifactName: drop_cloud_test_upload_stage_cloud_test_upload_job
+              pipelineArtifactBuildUrl: $(System.TaskDefinitionsUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)
+              buildDropArtifactName: ''
+              buildType: retail
+              buildArchitecture: amd64
+              scheduleBuildRequesterAlias: default
+              parserProperties: Worker:ENV_NAME=load;Worker:tags=(not @skip-ppe-pva);Worker:namespace=conversation-conductor-qa;Worker:stabilityLevel=PPE;Worker:botType=PVA;Worker:FIRST_PARTY_APP_AUTH=true;Worker:PVA_BOT=true
+              cacheEnabled: false
+              sessionTimeout: 1440
+              failFast: true
+  - stage: Test__Cloudtest_E2E_at_HM_PP_for_MixBot
+    dependsOn: cloud_test_upload_stage
+    displayName: 'Test: Cloudtest E2E at HM-PP for MixBot'
+    variables:
+      - name: ob_release_environment
+        value: Test
+    jobs:
+      - job: agentless_job
+        displayName: Agentless job
+        pool:
+          type: server
+        steps:
+          - task: CloudTestServerBuildTask@1
+            inputs:
+              displayName: 'Test: Cloudtest E2E at HM-PP for MixBot'
+              connectedServiceName: a0a15c60-8e84-4428-8219-c1d2660b1c34
+              cloudTestTenant: ct-account-hm-integration
+              testMapLocation: '[BuildRoot]\src\test\resources\cloudtest\TestMapJava.xml'
+              pipelineArtifactName: drop_cloud_test_upload_stage_cloud_test_upload_job
+              pipelineArtifactBuildUrl: $(System.TaskDefinitionsUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)
+              buildDropArtifactName: ''
+              buildType: retail
+              buildArchitecture: amd64
+              scheduleBuildRequesterAlias: default
+              parserProperties: Worker:ENV_NAME=load;Worker:tags=(not @skip-hm-pp-mix);Worker:namespace=conversation-conductor-qa;Worker:stabilityLevel=HM-PP;Worker:botType=MIX;Worker:FIRST_PARTY_APP_AUTH=true
+              cacheEnabled: false
+              sessionTimeout: 1440
+              failFast: true
+  - stage: Test__Cloudtest_E2E_at_HM_PP_for_PVABot
+    dependsOn: cloud_test_upload_stage
+    displayName: 'Test: Cloudtest E2E at HM-PP for PVABot'
+    variables:
+      - name: ob_release_environment
+        value: Test
+    jobs:
+      - job: agentless_job
+        displayName: Agentless job
+        pool:
+          type: server
+        steps:
+          - task: CloudTestServerBuildTask@1
+            inputs:
+              displayName: 'Test: Cloudtest E2E at HM-PP for PVABot'
+              connectedServiceName: a0a15c60-8e84-4428-8219-c1d2660b1c34
+              cloudTestTenant: ct-account-hm-integration
+              testMapLocation: '[BuildRoot]\src\test\resources\cloudtest\TestMapJava.xml'
+              pipelineArtifactName: drop_cloud_test_upload_stage_cloud_test_upload_job
+              pipelineArtifactBuildUrl: $(System.TaskDefinitionsUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)
+              buildDropArtifactName: ''
+              buildType: retail
+              buildArchitecture: amd64
+              scheduleBuildRequesterAlias: default
+              parserProperties: Worker:ENV_NAME=load;Worker:tags=(not @skip-hm-pp-pva);Worker:namespace=conversation-conductor-qa;Worker:stabilityLevel=HM-PP;Worker:botType=PVA;Worker:FIRST_PARTY_APP_AUTH=true;Worker:PVA_BOT=true
+              cacheEnabled: false
+              sessionTimeout: 1440
+              failFast: true
+  - stage: Test__Cloudtest_E2E_at_PRD_CAN_for_MixBot
+    dependsOn: cloud_test_upload_stage
+    displayName: 'Test: Cloudtest E2E at PRD-CAN for MixBot'
+    variables:
+      - name: ob_release_environment
+        value: Test
+    jobs:
+      - job: agentless_job
+        displayName: Agentless job
+        pool:
+          type: server
+        steps:
+          - task: CloudTestServerBuildTask@1
+            inputs:
+              displayName: 'Test: Cloudtest E2E at PRD-CAN for MixBot'
+              connectedServiceName: a0a15c60-8e84-4428-8219-c1d2660b1c34
+              cloudTestTenant: ct-account-hm-integration
+              testMapLocation: '[BuildRoot]\src\test\resources\cloudtest\TestMapJava.xml'
+              pipelineArtifactName: drop_cloud_test_upload_stage_cloud_test_upload_job
+              pipelineArtifactBuildUrl: $(System.TaskDefinitionsUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)
+              buildDropArtifactName: ''
+              buildType: retail
+              buildArchitecture: amd64
+              scheduleBuildRequesterAlias: default
+              parserProperties: Worker:ENV_NAME=load;Worker:tags=(not @skip-prd-can-mix);Worker:namespace=conversation-conductor-qa;Worker:stabilityLevel=PRD-CAN;Worker:botType=MIX;Worker:FIRST_PARTY_APP_AUTH=true
+              cacheEnabled: false
+              sessionTimeout: 1440
+              failFast: true
+  - stage: Test__Cloudtest_E2E_at_PRD_CAN_for_PVABot
+    dependsOn: cloud_test_upload_stage
+    displayName: 'Test: Cloudtest E2E at PRD-CAN for PVABot'
+    variables:
+      - name: ob_release_environment
+        value: Test
+    jobs:
+      - job: agentless_job
+        displayName: Agentless job
+        pool:
+          type: server
+        steps:
+          - task: CloudTestServerBuildTask@1
+            inputs:
+              displayName: 'Test: Cloudtest E2E at PRD-CAN for PVABot'
+              connectedServiceName: a0a15c60-8e84-4428-8219-c1d2660b1c34
+              cloudTestTenant: ct-account-hm-integration
+              testMapLocation: '[BuildRoot]\src\test\resources\cloudtest\TestMapJava.xml'
+              pipelineArtifactName: drop_cloud_test_upload_stage_cloud_test_upload_job
+              pipelineArtifactBuildUrl: $(System.TaskDefinitionsUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)
+              buildDropArtifactName: ''
+              buildType: retail
+              buildArchitecture: amd64
+              scheduleBuildRequesterAlias: default
+              parserProperties: Worker:ENV_NAME=load;Worker:tags=(not @skip-prd-can-pva);Worker:namespace=conversation-conductor-qa;Worker:stabilityLevel=PRD-CAN;Worker:botType=PVA;Worker:FIRST_PARTY_APP_AUTH=true;Worker:PVA_BOT=true
+              cacheEnabled: false
+              sessionTimeout: 1440
+              failFast: true
+  - stage: Test__Cloudtest_E2E_at_PRD_EU_for_MixBot
+    dependsOn: cloud_test_upload_stage
+    displayName: 'Test: Cloudtest E2E at PRD-EU for MixBot'
+    variables:
+      - name: ob_release_environment
+        value: Test
+    jobs:
+      - job: agentless_job
+        displayName: Agentless job
+        pool:
+          type: server
+        steps:
+          - task: CloudTestServerBuildTask@1
+            inputs:
+              displayName: 'Test: Cloudtest E2E at PRD-EU for MixBot'
+              connectedServiceName: a0a15c60-8e84-4428-8219-c1d2660b1c34
+              cloudTestTenant: ct-account-hm-integration
+              testMapLocation: '[BuildRoot]\src\test\resources\cloudtest\TestMapJava.xml'
+              pipelineArtifactName: drop_cloud_test_upload_stage_cloud_test_upload_job
+              pipelineArtifactBuildUrl: $(System.TaskDefinitionsUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)
+              buildDropArtifactName: ''
+              buildType: retail
+              buildArchitecture: amd64
+              scheduleBuildRequesterAlias: default
+              parserProperties: Worker:ENV_NAME=load;Worker:tags=(not @skip-prd-eu-mix);Worker:namespace=conversation-conductor-qa;Worker:stabilityLevel=PRD-EU;Worker:botType=MIX;Worker:FIRST_PARTY_APP_AUTH=true
+              cacheEnabled: false
+              sessionTimeout: 1440
+              failFast: true
+  - stage: Test__Cloudtest_E2E_at_PRD_EU_for_PVABot
+    dependsOn: cloud_test_upload_stage
+    displayName: 'Test: Cloudtest E2E at PRD-EU for PVABot'
+    variables:
+      - name: ob_release_environment
+        value: Test
+    jobs:
+      - job: agentless_job
+        displayName: Agentless job
+        pool:
+          type: server
+        steps:
+          - task: CloudTestServerBuildTask@1
+            inputs:
+              displayName: 'Test: Cloudtest E2E at PRD-EU for PVABot'
+              connectedServiceName: a0a15c60-8e84-4428-8219-c1d2660b1c34
+              cloudTestTenant: ct-account-hm-integration
+              testMapLocation: '[BuildRoot]\src\test\resources\cloudtest\TestMapJava.xml'
+              pipelineArtifactName: drop_cloud_test_upload_stage_cloud_test_upload_job
+              pipelineArtifactBuildUrl: $(System.TaskDefinitionsUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)
+              buildDropArtifactName: ''
+              buildType: retail
+              buildArchitecture: amd64
+              scheduleBuildRequesterAlias: default
+              parserProperties: Worker:ENV_NAME=load;Worker:tags=(not @skip-prd-eu-pva);Worker:namespace=conversation-conductor-qa;Worker:stabilityLevel=PRD-EU;Worker:botType=PVA;Worker:FIRST_PARTY_APP_AUTH=true;Worker:PVA_BOT=true
+              cacheEnabled: false
+              sessionTimeout: 1440
+              failFast: true
+  - stage: Test__Cloudtest_E2E_at_GCC_for_MixBot
+    dependsOn: cloud_test_upload_stage
+    displayName: 'Test: Cloudtest E2E at GCC for MixBot'
+    variables:
+      - name: ob_release_environment
+        value: Test
+    jobs:
+      - job: agentless_job
+        displayName: Agentless job
+        pool:
+          type: server
+        steps:
+          - task: CloudTestServerBuildTask@1
+            inputs:
+              displayName: 'Test: Cloudtest E2E at GCC for MixBot'
+              connectedServiceName: a0a15c60-8e84-4428-8219-c1d2660b1c34
+              cloudTestTenant: ct-account-hm-integration
+              testMapLocation: '[BuildRoot]\src\test\resources\cloudtest\TestMapJava.xml'
+              pipelineArtifactName: drop_cloud_test_upload_stage_cloud_test_upload_job
+              pipelineArtifactBuildUrl: $(System.TaskDefinitionsUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)
+              buildDropArtifactName: ''
+              buildType: retail
+              buildArchitecture: amd64
+              scheduleBuildRequesterAlias: default
+              parserProperties: Worker:ENV_NAME=load;Worker:tags=(not @skip-gcc-mix);Worker:namespace=conversation-conductor-qa;Worker:stabilityLevel=GCC;Worker:botType=MIX;Worker:FIRST_PARTY_APP_AUTH=true
+              cacheEnabled: false
+              sessionTimeout: 1440
+              failFast: true
+  - stage: Test__Cloudtest_E2E_at_GCC_for_PVABot
+    dependsOn: cloud_test_upload_stage
+    displayName: 'Test: Cloudtest E2E at GCC for PVABot'
+    variables:
+      - name: ob_release_environment
+        value: Test
+    jobs:
+      - job: agentless_job
+        displayName: Agentless job
+        pool:
+          type: server
+        steps:
+          - task: CloudTestServerBuildTask@1
+            inputs:
+              displayName: 'Test: Cloudtest E2E at GCC for PVABot'
+              connectedServiceName: a0a15c60-8e84-4428-8219-c1d2660b1c34
+              cloudTestTenant: ct-account-hm-integration
+              testMapLocation: '[BuildRoot]\src\test\resources\cloudtest\TestMapJava.xml'
+              pipelineArtifactName: drop_cloud_test_upload_stage_cloud_test_upload_job
+              pipelineArtifactBuildUrl: $(System.TaskDefinitionsUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)
+              buildDropArtifactName: ''
+              buildType: retail
+              buildArchitecture: amd64
+              scheduleBuildRequesterAlias: default
+              parserProperties: Worker:ENV_NAME=load;Worker:tags=(not @skip-gcc-pva);Worker:namespace=conversation-conductor-qa;Worker:stabilityLevel=GCC;Worker:botType=PVA;Worker:FIRST_PARTY_APP_AUTH=true;Worker:PVA_BOT=true
+              cacheEnabled: false
+              sessionTimeout: 1440
+              failFast: true
+  - stage: Test__Cloudtest_E2E_at_CORP_CD1_for_PVABot
+    dependsOn: cloud_test_upload_stage
+    displayName: 'Test: Cloudtest E2E at CORP-CD1 for PVABot'
+    variables:
+      - name: ob_release_environment
+        value: Test
+    jobs:
+      - job: agentless_job
+        displayName: Agentless job
+        pool:
+          type: server
+        steps:
+          - task: CloudTestServerBuildTask@1
+            inputs:
+              displayName: 'Test: Cloudtest E2E at CORP-CD1 for PVABot'
+              connectedServiceName: a0a15c60-8e84-4428-8219-c1d2660b1c34
+              cloudTestTenant: ct-account-hm-integration
+              testMapLocation: '[BuildRoot]\src\test\resources\cloudtest\TestMapJava.xml'
+              pipelineArtifactName: drop_cloud_test_upload_stage_cloud_test_upload_job
+              pipelineArtifactBuildUrl: $(System.TaskDefinitionsUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)
+              buildDropArtifactName: ''
+              buildType: retail
+              buildArchitecture: amd64
+              scheduleBuildRequesterAlias: default
+              parserProperties: Worker:ENV_NAME=load;Worker:tags=(not @skip-corp-cd1-pva);Worker:namespace=conversation-conductor-qa;Worker:stabilityLevel=CORP-CD1;Worker:botType=PVA;Worker:FIRST_PARTY_APP_AUTH=true;Worker:PVA_BOT=true
+              cacheEnabled: false
+              sessionTimeout: 1440
+              failFast: true
+
+  - stage: Test__Cloudtest_E2E_at_TST_for_PVABot
+    dependsOn: cloud_test_upload_stage
+    displayName: 'Test: Cloudtest E2E at TST for PVABot'
+    variables:
+      - name: ob_release_environment
+        value: Test
+    jobs:
+      - job: agentless_job
+        displayName: Agentless job
+        pool:
+          type: server
+        steps:
+          - task: CloudTestServerBuildTask@1
+            inputs:
+              displayName: 'Test: Cloudtest E2E at TST for PVABot'
+              connectedServiceName: a0a15c60-8e84-4428-8219-c1d2660b1c34
+              cloudTestTenant: ct-account-hm-integration
+              testMapLocation: '[BuildRoot]\src\test\resources\cloudtest\TestMapJava.xml'
+              pipelineArtifactName: drop_cloud_test_upload_stage_cloud_test_upload_job
+              pipelineArtifactBuildUrl: $(System.TaskDefinitionsUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)
+              buildDropArtifactName: ''
+              buildType: retail
+              buildArchitecture: amd64
+              scheduleBuildRequesterAlias: default
+              parserProperties: Worker:ENV_NAME=load;Worker:tags=(not @skip-tst-pva);Worker:namespace=conversation-conductor-qa;Worker:stabilityLevel=TST;Worker:botType=PVA;Worker:FIRST_PARTY_APP_AUTH=true;Worker:PVA_BOT=true
+              cacheEnabled: false
+              sessionTimeout: 1440
+              failFast: true

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TestJobGroup>
+    <ResourceSpec>
+        <Resource SKU="D4v3" Image="ubuntu-hm"/>
+    </ResourceSpec>
+    <Setup TimeoutMins="20">
+        <BuildFiles>
+            <Copy Src="[BuildRoot]\*" Dest="[WorkingDirectory]\" IsRecursive="true"/>
+        </BuildFiles>
+        <Scripts>
+            <Script Path="[WorkingDirectory]\src\test\resources\cloudtest\setup_java.sh" Args="[WorkingDirectory]"/>
+
+        </Scripts>
+    </Setup>
+    <TestJob Name="CloudTest.E2E">
+        <Execution Type="Exe" Path="[WorkingDirectory]\src\test\resources\cloudtest\run_java_tests.sh" Parser="JUnit"
+                   Args="[WorkingDirectory] [LoggingDirectory] "/>
+    </TestJob>
+</TestJobGroup>

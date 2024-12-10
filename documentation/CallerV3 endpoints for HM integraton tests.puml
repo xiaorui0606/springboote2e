@@ -1,0 +1,77 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+/'
+autonumber
+
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: another authentication Response'/
+/' autonumber '/
+participant HMtest
+participant AcsCallerV3
+participant ConversationConductor
+participant HM_MIX_PVA_BOT
+
+HMtest -> AcsCallerV3: 1. POST /calls/outbound (destinationNumber)
+AcsCallerV3 --> ConversationConductor: start Call request
+ConversationConductor --> HM_MIX_PVA_BOT: Choose MIX or PVA bot based on destinationNumber
+ConversationConductor --> AcsCallerV3: testSessionId
+HM_MIX_PVA_BOT --> AcsCallerV3: Bot starts playing Welcome Message + DTMF Prompt
+AcsCallerV3 --> HMtest: testSessionId
+HMtest -> HMtest: assert 200 success and obtain testSessionId
+
+alt error response
+AcsCallerV3 --> HMtest: 400 Bad request
+AcsCallerV3 --> HMtest: 408 Request Timeout
+AcsCallerV3 --> HMtest: 503 Service Unavailable
+end alt
+
+HMtest -> AcsCallerV3: 2. GET /test/conversationid/{testSessionId}
+AcsCallerV3 --> HMtest: conversationId(s)
+HMtest -> HMtest: assert 200 success and obtain conversationId
+
+HMtest -> AcsCallerV3: 3. GET /event/eventgrid/genericevents/{conversationId}
+AcsCallerV3 --> HMtest: call genericevents
+HMtest -> HMtest: assert eventMessage == "StartCall success"
+HMtest -> HMtest: sleep [x] seconds = Length (HM Welcome Message)
+
+HMtest -> AcsCallerV3: 4. GET /calls/transcript/{conversationId}
+AcsCallerV3 --> ConversationConductor: fetch call transcript
+ConversationConductor --> AcsCallerV3: call transcript
+AcsCallerV3 --> HMtest: call transcript
+HMtest -> HMtest: assert expected 'HM Welcome Message'
+
+HMtest -> AcsCallerV3: 5. POST /calls/senddtmf (example: C2 select option '2' for checking flight status)
+AcsCallerV3 --> ConversationConductor: send C2 DTMF selection
+ConversationConductor --> HM_MIX_PVA_BOT: C2 DTMF selection
+HM_MIX_PVA_BOT --> AcsCallerV3: Bot starts playing message based on C2 DTMF selection
+
+HMtest -> AcsCallerV3: 6. GET /event/eventgrid/genericevents/{conversationId}
+AcsCallerV3 --> HMtest: call genericevents
+HMtest -> HMtest: assert eventMessage == "Send DTMF successful."
+
+HMtest -> HMtest: sleep [x] seconds = Length (HM Message according to DTMF selection)
+HMtest -> AcsCallerV3: 7. GET /calls/transcript/{conversationId}
+AcsCallerV3 --> ConversationConductor: fetch call transcript
+ConversationConductor --> AcsCallerV3: call transcript
+AcsCallerV3 --> HMtest: call transcript
+HMtest -> HMtest: assert expected Bot response message (example: message on flight status)
+
+HMtest -> AcsCallerV3: 8. POST /calls/hangup
+AcsCallerV3 --> ConversationConductor: hangup request
+ConversationConductor --> HM_MIX_PVA_BOT: hangup request
+HM_MIX_PVA_BOT --> AcsCallerV3: Bot plays 'Goodbye' message
+
+HMtest -> HMtest: sleep [x] seconds
+HMtest -> AcsCallerV3: 9. GET /calls/transcript/{conversationId}
+AcsCallerV3 --> ConversationConductor: fetch call transcript
+ConversationConductor --> AcsCallerV3: call transcript
+AcsCallerV3 --> HMtest: call transcript
+HMtest -> HMtest: assert expected 'Goodbye' message
+
+HMtest -> AcsCallerV3: 10. GET /event/eventgrid/genericevents/{conversationId}
+AcsCallerV3 --> HMtest: call genericevents
+HMtest -> HMtest: assert eventMessage == 'Call hang up successful'
+@enduml

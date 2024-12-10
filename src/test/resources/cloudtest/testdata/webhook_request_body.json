@@ -1,0 +1,18 @@
+{
+  "properties": {
+    "destination": {
+      "properties": {
+        "endpointUrl": "%s/v1/calls/incoming/%s",
+        "azureActiveDirectoryApplicationIdOrUri": "%s",
+        "azureActiveDirectoryTenantId": "%s"
+      },
+      "endpointType": "WebHook"
+    },
+    "filter": {
+      "includedEventTypes": [
+        "Microsoft.Communication.IncomingCall",
+        "Microsoft.Communication.SMSReceived"
+      ]
+    }
+  }
+}

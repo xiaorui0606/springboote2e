@@ -1,0 +1,7 @@
+setuptools
+pytest
+requests
+azure-keyvault-secrets
+azure-keyvault-keys
+azure-identity
+azure-storage-blob

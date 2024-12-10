@@ -1,0 +1,27 @@
+parameters:
+  - name: isOfficial
+    type: boolean
+    default: false
+  - name: useGitVersion
+    type: boolean
+    default: false
+
+stages:
+  - stage: cloud_test_upload_stage
+    jobs:
+      - job: cloud_test_upload_job
+        pool:
+          type: linux
+        variables:
+          ob_outputDirectory: '$(Build.SourcesDirectory)/' # this directory is uploaded to pipeline artifacts
+        steps:
+          # codeql build
+          - task: MavenAuthenticate@0
+            displayName: "Enable Maven Feed(s)"
+            inputs:
+              artifactsFeeds: "central,entrd-lightsaber-common"
+          - script: .ci/build.sh
+            displayName: "Java Build"
+
+          - script: echo "Uploading Cloud Test Artifacts"
+            displayName: "Upload Cloud Test Artifacts"

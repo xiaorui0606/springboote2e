@@ -1,0 +1,14 @@
+{
+  "acsRecipientType": "acsIdentifier",
+  "acsRecipientId": "%s",
+  "acsResourceId": "/subscriptions/78ec1d28-3374-4040-95f4-f5426876a64c/resourceGroups/%s/providers/microsoft.communication/communicationservices/%s",
+  "acsTenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+  "botInfo": {
+    "botId": "%s",
+    "botTenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+    "botMsaAppId": "b3dbafe6-bb34-4568-834c-3e80793c40a7",
+    "botEndpoint": "%s",
+    "botMsaAppType": "123",
+    "botMsaAppMSIResourceId": "55"
+  }
+}

@@ -1,0 +1,51 @@
+#################################################################################
+#                               OneBranch Pipelines                             #
+# This pipeline was created by EasyStart from a sample located at:              #
+#   https://aka.ms/obpipelines/easystart/samples                                #
+# Documentation:  https://aka.ms/obpipelines                                    #
+# Yaml Schema:    https://aka.ms/obpipelines/yaml/schema                        #
+# Retail Tasks:   https://aka.ms/obpipelines/tasks                              #
+# Support:        https://aka.ms/onebranchsup                                   #
+#################################################################################
+
+trigger: none
+
+variables:
+  CDP_DEFINITION_BUILD_COUNT: $[counter('', 0)]
+  DEBIAN_FRONTEND: noninteractive
+  LinuxContainerImage: mcr.microsoft.com/onebranch/cbl-mariner/build:2.0
+
+resources:
+  pipelines:
+    - pipeline: onecall_jdk # Name of the pipeline resource.
+      source: conversation-conductor-acs-caller-java-sdk-PullRequest # The name of the pipeline referenced by this pipeline resource.
+      trigger: true
+  repositories:
+    - repository: templates
+      type: git
+      name: OneBranch.Pipelines/GovernedTemplates
+      ref: refs/heads/main
+    - repository: qdl-template
+      type: git
+      name: "Nuance Enterprise/sample-quality-gates-repo"
+      ref: refs/heads/main
+
+extends:
+  template: v2/OneBranch.NonOfficial.CrossPlat.yml@templates
+  parameters:
+    globalSdl:
+      runmode: stage
+      policheck:
+        break: false
+      codeql:
+        compiled:
+          enabled: true
+    git:
+      persistCredentials: true
+      submodules: true
+      fetchDepth: -1
+    stages:
+      - template: common_pullRequest.yml@self
+        parameters:
+          isOfficial: 'false'
+          useGitVersion: 'true'

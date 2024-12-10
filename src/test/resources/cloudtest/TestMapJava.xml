@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TestMap>
+    <TestJobGroup Name="CCE2ERegressionSuite"
+                  TestSystem="Default"
+                  ConfigPath="[BuildRoot]\src\test\resources\cloudtest\TestJobGroupJava.xml"
+                  IsActive="true"/>
+</TestMap>

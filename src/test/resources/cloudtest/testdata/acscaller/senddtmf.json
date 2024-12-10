@@ -1,0 +1,6 @@
+{
+  "id": "%s",
+  "dtmfTone": "%s",
+  "idType": "%s ",
+  "connectionString": "%s"
+}

@@ -1,0 +1,5 @@
+{
+  "id": "%s",
+  "connectionString": "%s",
+  "callHangUpIdType": "%s"
+}

@@ -1,0 +1,8 @@
+{
+  "key_vault_managed_identity_client_id": "b60d67d7-c1cb-4f0e-a74d-2fd28fb11419",
+  "key_vault_name": "kv-cloudtest-hm-int",
+  "environment_name": "$ENV_NAME:load",
+  "text_map_file_name": "$TEXT_MAP:textMap_PPE_PVABot.json",
+  "httpClient": "okhttp",
+  "http_read_timeout": "60"
+}

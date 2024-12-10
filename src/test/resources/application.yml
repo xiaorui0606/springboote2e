@@ -1,0 +1,75 @@
+NUANCE: nuance
+
+# Used by OpenTracing to report the "service-name" of a Span
+# See https://github.com/opentracing-contrib/java-spring-jaeger#defaults
+logging:
+  level:
+    io:
+      lettuce:
+        core:
+          protocol: INFO
+    org.springframework: INFO
+    io.netty: INFO
+    io.grpc.netty: INFO
+    net.net.devh: INFO
+    com:
+      nuance:
+        ent:
+          cc: INFO
+    root: INFO
+
+spring:
+  devtools:
+    restart:
+      enabled: true
+  application:
+    name: test
+  spring:
+    data:
+      mongodb:
+        database: oc-sim-dev
+        retry:
+          delay: 500
+          maxAttempts: 3
+          maxDelay: 1000
+        uri: mongodb://cosdbeuentdevacscaller:${MONGODB_PASSWORD}@cosdbeuentdevacscaller.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@cosdbeuentdevacscaller@
+
+
+# Tomcat listening port
+server:
+  port: 9099
+# Spring Boot management endpoint configuration
+management:
+  server:
+    # this one is only for management actuator
+    port: 9099
+  info:
+    git:
+      mode: full
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: '*'
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+    health:
+      enabled: true
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include:
+            - redis
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+estaGracefulShutdownWaitSeconds: 1

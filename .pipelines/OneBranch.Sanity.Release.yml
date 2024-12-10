@@ -1,0 +1,45 @@
+trigger: none
+variables:
+  - name: botNumber
+    value: +18552363905
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: OneBranch.Pipelines/GovernedTemplates
+      ref: refs/heads/main
+  pipelines:
+    - pipeline: _conversation-conductor-hm-e2e-PullRequest
+      trigger: none
+      source: conversation-conductor-hm-e2e-PullRequest
+      project: Nuance Enterprise
+extends:
+  template: v2/OneBranch.NonOfficial.CrossPlat.yml@templates
+  parameters:
+    stages:
+      - stage: Test__CloudTest_E2E_Sanity_run
+        displayName: 'Test: CloudTest E2E Sanity run'
+        variables:
+          - name: ob_release_environment
+            value: Test
+        dependsOn: []
+        jobs:
+          - job: agentless_job
+            displayName: Agentless job
+            pool:
+              type: server
+            steps:
+              - task: CloudTestServerBuildTask@1
+                inputs:
+                  connectedServiceName: a0a15c60-8e84-4428-8219-c1d2660b1c34
+                  cloudTestTenant: ct-account-hm-integration
+                  testMapLocation: '[BuildRoot]\src\test\resources\cloudtest\TestMapJava.xml'
+                  pipelineArtifactName: drop_cloud_test_upload_stage_cloud_test_upload_job
+                  pipelineArtifactBuildUrl: $(System.TaskDefinitionsUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)
+                  buildType: retail
+                  buildArchitecture: amd64
+                  scheduleBuildRequesterAlias: default
+                  parserProperties: Worker:ENV_NAME=load;Worker:botNumber=$(botNumber);Worker:namespace=conversation-conductor-qa;Worker:FIRST_PARTY_APP_AUTH=true;Worker:isSanity=true
+                  cacheEnabled: true
+                  sessionTimeout: 1440
+                  failFast: true

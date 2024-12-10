@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="master test suite" verbose="1">
+   <suite-files>
+       <suite-file path="irs_testcase_832834.xml" />
+       <suite-file path="irs_testcase_832835.xml" />
+       <suite-file path="irs_testcase_832836.xml" />
+   </suite-files>
+</suite>

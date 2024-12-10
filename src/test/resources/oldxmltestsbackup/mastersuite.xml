@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="master test suite" verbose="1">
+   <suite-files>
+       <suite-file path="testcase_682958.xml" />
+       <suite-file path="testcase_729538.xml" />
+       <suite-file path="testcase_729540.xml" />
+       <suite-file path="testcase_729541.xml" />
+       <suite-file path="testcase_729542.xml" />
+       <suite-file path="testcase_729543.xml" />
+       <suite-file path="testcase_729544.xml" />
+       <suite-file path="testcase_729545.xml" />
+       <suite-file path="testcase_729546.xml" />
+       <suite-file path="testcase_729547.xml" />
+       <suite-file path="testcase_729548.xml" />
+       <suite-file path="testcase_729549.xml" />
+       <suite-file path="testcase_729550.xml" />
+       <suite-file path="testcase_729551.xml" />
+       <suite-file path="testcase_729552.xml" />
+       <suite-file path="testcase_729553.xml" />
+       <suite-file path="testcase_729554.xml" />
+       <suite-file path="testcase_729555.xml" />
+       <suite-file path="testcase_729556.xml" />
+       <suite-file path="testcase_729557.xml" />
+       <suite-file path="testcase_729558.xml" />
+       <suite-file path="testcase_729559.xml" />
+       <suite-file path="testcase_729560.xml" />
+       <suite-file path="testcase_729561.xml" />
+       <suite-file path="testcase_729562.xml" />
+       <suite-file path="testcase_729563.xml" />
+       <suite-file path="testcase_729564.xml" />
+       <suite-file path="testcase_729565.xml" />
+       <suite-file path="testcase_738267.xml" />
+   </suite-files>
+</suite>

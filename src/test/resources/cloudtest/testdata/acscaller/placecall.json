@@ -1,0 +1,10 @@
+{
+  "noOfCalls": 1,
+  "destinationNumber": "%s",
+  "sourceNumber": "%s",
+  "userType": "PHONE_NUMBER_IDENTIFIER",
+  "audioLoopTimeout": "%s",
+  "audioUrl": "%s",
+  "connectionString": "%s",
+  "personShortName": "%s"
+}

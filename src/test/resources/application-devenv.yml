@@ -1,0 +1,15 @@
+cloudtest:
+  baseUrl: https://dev.voice-channel.azure.net
+  callControllerMapping: /call-controller
+
+spring:
+  data:
+    mongodb:
+      database: oc-sim-dev
+
+ocsim:
+  baseMapping: https://dev.voice-channel.azure.net
+  ocSimMapping: oc-sim-dev/v1/activity
+
+acscaller:
+  baseUrl: https://qa.voice-channel.azure.net/onecall

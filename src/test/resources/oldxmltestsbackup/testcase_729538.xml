@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="testcase_729538" verbose="1">
+    <test name="testcase_729538: BS Happy Path step 1-4" parallel="none" preserve-order="true" thread-count="1">
+        <classes>
+            <class name="com.nuance.ent.cc.e2e.cloudtest.tests.HMIntTestWithOneCall">
+                <methods>
+                    <include name="getAccessToken"></include>
+                    <include name="placeCallXML">
+                        <parameter name="targetNumber" value="demo2ACSBot"></parameter>
+                        <parameter name="sourceNumber" value="+18772151378"></parameter>
+                        <parameter name="callHangUpTimeout" value="600"></parameter>
+                        <parameter name="language" value="en-US"></parameter>
+                    </include>
+                    <include name="getTestSessionStatus"></include>
+                    <include name="getCallerEvents"></include>
+                    <include name="getTranscriptResponseUsingPolling">
+                        <parameter name="expectedMessage" value="welcomeMsg"></parameter>
+                        <parameter name="matchingPercentage" value="0.75"></parameter>
+                        <parameter name="maxDuration" value="25"></parameter>
+                        <parameter name="delayInMilli" value="5000"></parameter>
+                    </include>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="testcase_729538: BS Happy Path step 5-6" parallel="none" preserve-order="true" thread-count="1">
+        <classes>
+            <class name="com.nuance.ent.cc.e2e.cloudtest.tests.HMIntTestWithOneCall">
+                <methods>
+                    <include name="getTranscriptResponseUsingPolling">
+                        <parameter name="expectedMessage" value="dtmfPromptEnd"></parameter>
+                        <parameter name="matchingPercentage" value="0.75"></parameter>
+                        <parameter name="maxDuration" value="20"></parameter>
+                        <parameter name="delayInMilli" value="5000"></parameter>
+                    </include>
+                    <include name="waitingForPreviousProcessToComplete">
+                        <parameter name="waitTime" value="3"></parameter>
+                    </include>
+                    <include name="speakTTSUsingTestSessionId">
+                        <parameter name="speechText" value="bookFlightVoice"></parameter>
+                    </include>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="testcase_729538: BS Happy Path step 7-8" parallel="none" preserve-order="true" thread-count="1">
+        <classes>
+            <class name="com.nuance.ent.cc.e2e.cloudtest.tests.HMIntTestWithOneCall">
+                <methods>
+                    <include name="getTranscriptResponseUsingPolling">
+                        <parameter name="expectedMessage" value="travelToQuestion"></parameter>
+                        <parameter name="matchingPercentage" value="0.75"></parameter>
+                        <parameter name="maxDuration" value="25"></parameter>
+                        <parameter name="delayInMilli" value="5000"></parameter>
+                    </include>
+                    <include name="waitingForPreviousProcessToComplete">
+                        <parameter name="waitTime" value="6"></parameter>
+                    </include>
+                    <include name="speakTTSUsingTestSessionId">
+                        <parameter name="speechText" value="travelToAnswer"></parameter>
+                    </include>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="testcase_729538: BS Happy Path step 9-10" parallel="none" preserve-order="true" thread-count="1">
+        <classes>
+            <class name="com.nuance.ent.cc.e2e.cloudtest.tests.HMIntTestWithOneCall">
+                <methods>
+                    <include name="getTranscriptResponseUsingPolling">
+                        <parameter name="expectedMessage" value="seatAvailableForBooking"></parameter>
+                        <parameter name="matchingPercentage" value="0.75"></parameter>
+                        <parameter name="maxDuration" value="30"></parameter>
+                        <parameter name="delayInMilli" value="5000"></parameter>
+                    </include>
+                    <include name="waitingForPreviousProcessToComplete">
+                        <parameter name="waitTime" value="3"></parameter>
+                    </include>
+                    <include name="speakTTSUsingTestSessionId">
+                        <parameter name="speechText" value="voiceConfirmationForYes"></parameter>
+                    </include>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="testcase_729538: BS Happy Path step 11-12" parallel="none" preserve-order="true" thread-count="1">
+        <classes>
+            <class name="com.nuance.ent.cc.e2e.cloudtest.tests.HMIntTestWithOneCall">
+                <methods>
+                    <include name="getTranscriptResponseUsingPolling">
+                        <parameter name="expectedMessage" value="flightBookingConfirmationMsg"></parameter>
+                        <parameter name="matchingPercentage" value="0.75"></parameter>
+                        <parameter name="maxDuration" value="30"></parameter>
+                        <parameter name="delayInMilli" value="5000"></parameter>
+                    </include>
+                    <include name="waitingForPreviousProcessToComplete">
+                        <parameter name="waitTime" value="2"></parameter>
+                    </include>
+                    <include name="callHangUpXML"></include>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
